@@ -164,8 +164,7 @@ class AllianceController {
 		/** @var AllianceMember[] */
 		$data = $this->db->fetchAll(
 			AllianceMember::class,
-			"SELECT * FROM `alliance_members_<myname>` WHERE `org_id`=?",
-			$org->guild_id
+			"SELECT * FROM `alliance_members_<myname>`"
 		);
 		/** @var array<string,AllianceMember> */
 		$dbEntries = [];
@@ -217,7 +216,7 @@ class AllianceController {
 
 		// remove buddies who are no longer org members
 		foreach ($dbEntries as $name => $buddy) {
-			if ($buddy->mode !== 'add') {
+			if ($buddy->org_id === $org->guild_id && $buddy->mode !== 'add') {
 				$this->db->exec(
 					"DELETE FROM `alliance_members_<myname>` WHERE `name` = ? AND `org_id` = ?",
 					$name,
